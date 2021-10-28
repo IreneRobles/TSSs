@@ -1,2 +1,2 @@
-# TSS_quantification
+# TSSs
  Quantification of TSS using FISHQuant outlines
