@@ -555,16 +555,6 @@ function quant4(tss, tssname, cell, image,  key)
 end
 
 
-
-
-
-
-function findin(a, b)
-    findall((in)(b), a)
-end
-
-
-
 # For 3 channels I am not sure it works
 
 
