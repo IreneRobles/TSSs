@@ -564,38 +564,6 @@ end
 
 
 
-function join_in_all_common_columns(dataframe1, dataframe2)
-    cols1 = names(dataframe1)
-    cols2 = names(dataframe2)
-    common_names = findin(cols1, cols2)
-    columns_to_join = cols1[common_names]
-    new_dataframe = DataFrame()
-    for common_name in columns_to_join
-        new_dataframe[!,common_name] = vcat(dataframe1[!,common_name], dataframe2[!,common_name])
-    end
-    return new_dataframe
-end
-
-function join_in_all_common_columns(dfs::Array{DataFrames.DataFrame,1})
-    n_df = length(dfs)
-    df = dfs[1]
-    for i in 2:n_df
-        df = NoLongerProblems.join_in_all_common_columns(df, dfs[i])
-    end
-    return df
-end
-
-function join_in_all_common_columns(dfs...)
-    df = dfs[1]
-    
-    for i in 2:length(dfs)
-        df = join_in_all_common_columns(df, dfs[i])
-    end
-    
-    return df
-end
-
-
 # For 3 channels I am not sure it works
 
 
