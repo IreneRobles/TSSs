@@ -17,7 +17,7 @@ function join_in_all_common_columns(dataframe1, dataframe2)
     columns_to_join = cols1[common_names]
     new_dataframe = DataFrame()
     for common_name in columns_to_join
-        new_dataframe[common_name] = vcat(dataframe1[common_name], dataframe2[common_name])
+        new_dataframe[!,common_name] = vcat(dataframe1[!,common_name], dataframe2[!,common_name])
     end
     return new_dataframe
 end
