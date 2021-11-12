@@ -1,6 +1,5 @@
-using ColorTypes
-using FixedPointNumbers
-using MATLAB
+
+#using MATLAB
 
 function maximumrgb(rgb)
     try
@@ -29,24 +28,27 @@ function brightest_pixel_localizarion(im)
     findmax(im)[2]
 end
 
-function avg_dot_as_Mehdi(dotfile, radious = 2)
- mat"""
-AVG_image_info = imfinfo($dotfile);
-num_images = numel(AVG_image_info);
-AVG_image = imread($dotfile);
-for k = 1:num_images
-    AVG_image(:,:,k)=imread($dotfile, k, 'Info', AVG_image_info);
-end
+
+
+#function avg_dot_as_Mehdi(dotfile, radious = 2)
+# mat"""
+#AVG_image_info = imfinfo($dotfile);
+#num_images = numel(AVG_image_info);
+#AVG_image = imread($dotfile);
+#for k = 1:num_images
+#    AVG_image(:,:,k)=imread($dotfile, k, 'Info', AVG_image_info);
+#end
     
-ind_AVG_image=find(AVG_image==max(max(max(AVG_image))));
-[i1, i2, i3] = ind2sub(size(AVG_image), ind_AVG_image(1));
-r=$radious;  
-brightest_AVG_image=AVG_image(i1-r:i1+r,i2-r:i2+r,i3-r:i3+r);
-quant = sum(sum(sum(brightest_AVG_image,1),2),3);
-$quant = quant
-    """
-@mget quant
-    end
+#ind_AVG_image=find(AVG_image==max(max(max(AVG_image))));
+#[i1, i2, i3] = ind2sub(size(AVG_image), ind_AVG_image(1));
+#r=$radious;  
+#brightest_AVG_image=AVG_image(i1-r:i1+r,i2-r:i2+r,i3-r:i3+r);
+#quant = sum(sum(sum(brightest_AVG_image,1),2),3);
+#$quant = quant
+#    """
+#@mget quant
+#    end
+
 
 
 function int_brightest_pixel(im; radious = 0)

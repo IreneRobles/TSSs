@@ -12,6 +12,7 @@ using ColorTypes
 using Distances
 using ProgressMeter
 using ImageFiltering
+using FixedPointNumbers
 
 include("FilesAndImages.jl")
 include("ReadOutlines.jl")
