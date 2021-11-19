@@ -148,7 +148,7 @@ end
 
 
 
-function transform_into_TSSdict(t, pat)
+function transform_into_TSSdict(t, pat; z = true)
     tss = Dict()
     l1 = t[!,Symbol("locus1_"*pat)][1]
     l2 = t[!,Symbol("locus2_"*pat)][1]
@@ -158,14 +158,16 @@ function transform_into_TSSdict(t, pat)
         tss[l1][:x_] = t[!,Symbol("locus1_x_"*pat)][1]
         tss[l1][:y_] = t[!,Symbol("locus1_y_"*pat)][1] 
         tss[l1][:z_] = t[!,Symbol("locus1_z_"*pat)][1]
-        tss[l1][:int2] = t[!,Symbol("locus1_int2_"*pat)][1] 
+        tss[l1][:int2] = t[!,Symbol("locus1_int2_"*pat)][1]
+        if z == false; tss[l1][:z_] = 0. end
     
         if startswith(string(l2), "TxS")
             tss[l2] = Dict()
             tss[l2][:x_] = t[!,Symbol("locus2_x_"*pat)][1]
             tss[l2][:y_] = t[!,Symbol("locus2_y_"*pat)][1]
             tss[l2][:z_] = t[!,Symbol("locus2_z_"*pat)][1]
-            tss[l2][:int2] = t[!,Symbol("locus2_int2_"*pat)][1] 
+            tss[l2][:int2] = t[!,Symbol("locus2_int2_"*pat)][1]
+            if z == false; tss[l2][:z_] = 0. end
         end
     end
     
@@ -358,10 +360,10 @@ end
 
 
 # For 3 channels not sure wether it works
-function link_TSSs_cell(t2, t3, t4; max_distance = 23)
+function link_TSSs_cell(t2, t3, t4; max_distance = 23, z = true)
     # Store number ot TSS in the cell 
     n2 =  t2[!,"N_"*findpattern(t2)][1]; n3 = t3[!,"N_"*findpattern(t3)][1]; n4 =  t4[!,"N_"*findpattern(t4)][1]
-    T2 = transform_into_TSSdict(t2, findpattern(t2)); T3 = transform_into_TSSdict(t3, findpattern(t3)); T4 = transform_into_TSSdict(t4, findpattern(t4));
+    T2 = transform_into_TSSdict(t2, findpattern(t2), z = z); T3 = transform_into_TSSdict(t3, findpattern(t3), z = z); T4 = transform_into_TSSdict(t4, findpattern(t4), z = z);
     dot_distances = measure_tss_distances(T2, T3, T4)
     locus1, locus2 = assign_locus_from_distances(dot_distances; max_distance = max_distance)
     
@@ -396,10 +398,10 @@ end
 
 # For 2 channels it works
 
-function link_TSSs_cell(t2, t3; max_distance = 23)
+function link_TSSs_cell(t2, t3; max_distance = 23, z = true)
     # Store number ot TSS in the cell 
     n2 =  t2[!,"N_"*findpattern(t2)][1]; n3 = t3[!,"N_"*findpattern(t3)][1]; n4 = 0 #n4 =  t4[!,"N_"*findpattern(t4)][1]
-    T2 = transform_into_TSSdict(t2, findpattern(t2)); T3 = transform_into_TSSdict(t3, findpattern(t3)); #T4 = transform_into_TSSdict(t4, findpattern(t4));
+    T2 = transform_into_TSSdict(t2, findpattern(t2), z = z); T3 = transform_into_TSSdict(t3, findpattern(t3), z = z); #T4 = transform_into_TSSdict(t4, findpattern(t4));
      dot_distances = measure_tss_distances(T2, T3)
     nt2 = length(unique(dot_distances[dot_distances[!,:TSS2].!=0, :TSS2]))
     nt3 = length(unique(dot_distances[dot_distances[!,:TSS3].!=0, :TSS3]))
@@ -558,7 +560,7 @@ end
 # For 3 channels I am not sure it works
 
 
-function link_TSSs(t2, t3, t4; max_distance = 23)
+function link_TSSs(t2, t3, t4; max_distance = 23, z = true)
     tt2 = TSSs.transform_in_dict_image_cell(t2); tt3 = TSSs.transform_in_dict_image_cell(t3); tt4 = TSSs.transform_in_dict_image_cell(t4) 
     linked_tss = Dict()
     p = Progress(nrow(t2))
@@ -571,9 +573,9 @@ function link_TSSs(t2, t3, t4; max_distance = 23)
                 next!(p)
                 
                 cell_tss2 = tt2[im][cell]; cell_tss3 = tt3[im][cell]; cell_tss4 = tt4[im][cell]
-                tss2s = collect(keys(TSSs.transform_into_TSSdict(cell_tss2, findpattern(t2))))
-                tss3s = collect(keys(TSSs.transform_into_TSSdict(cell_tss3, findpattern(t3))))
-                tss4s = collect(keys(TSSs.transform_into_TSSdict(cell_tss4, findpattern(t4))))
+                tss2s = collect(keys(TSSs.transform_into_TSSdict(cell_tss2, findpattern(t2), z = z)))
+                tss3s = collect(keys(TSSs.transform_into_TSSdict(cell_tss3, findpattern(t3), z = z)))
+                tss4s = collect(keys(TSSs.transform_into_TSSdict(cell_tss4, findpattern(t4), z = z)))
                 
                 loc = TSSs.link_TSSs_cell(cell_tss2, cell_tss3, cell_tss4; max_distance = max_distance)
                 # This bit of code was used on 20thAugust to debug the code
@@ -636,7 +638,7 @@ end
 # For 2 channels it works
 
 
-function link_TSSs(t2, t3; max_distance = 23)
+function link_TSSs(t2, t3; max_distance = 23, z = true)
      tt2 = TSSs.transform_in_dict_image_cell(t2); tt3 = TSSs.transform_in_dict_image_cell(t3); #tt4 = TSSs.transform_in_dict_image_cell(t4) 
     linked_tss = Dict()
     p = Progress(nrow(t2))
@@ -651,9 +653,9 @@ function link_TSSs(t2, t3; max_distance = 23)
                 #cell = "Cell_CP_17"
                 
                 cell_tss2 = tt2[im][cell]; cell_tss3 = tt3[im][cell];# cell_tss4 = tt4[im][cell]
-                tss2s = collect(keys(TSSs.transform_into_TSSdict(cell_tss2, findpattern(t2))))
-                tss3s = collect(keys(TSSs.transform_into_TSSdict(cell_tss3, findpattern(t3))))
-                #tss4s = collect(keys(TSSs.transform_into_TSSdict(cell_tss4, findpattern(t4))))
+                tss2s = collect(keys(TSSs.transform_into_TSSdict(cell_tss2, findpattern(t2), z = z)))
+                tss3s = collect(keys(TSSs.transform_into_TSSdict(cell_tss3, findpattern(t3), z = z)))
+                #tss4s = collect(keys(TSSs.transform_into_TSSdict(cell_tss4, findpattern(t4), z = z)))
                 
                 loc = TSSs.link_TSSs_cell(cell_tss2, cell_tss3; max_distance = max_distance)
              
@@ -784,4 +786,25 @@ function add_tss_quantification3(t2,t3,freq_tb; quantmethod = :r2)
        
 end
 
-
+function link_TSS_GENE_ENHANCER(nascent,ehn, genefolder; suffix = "", max_distance = 5, z = false)
+    tss_gene = DataFrame(CSV.File(normpath(genefolder, nascent*".csv")))
+    tss_ehn = DataFrame(CSV.File(normpath(genefolder, ehn*".csv")))
+    tsslinked = TSSs.link_TSSs(tss_gene, tss_ehn; max_distance = max_distance, z = z);
+    tsswithquant = TSSs.add_tss_quantification3(tss_gene, tss_ehn, tsslinked; quantmethod = :r2)
+    tb = fixnames_gene_enh_pairs(tsswithquant, nascent, ehn)
+tb[!,:Image_Cell] = tb[!,:Image].*"__".*tb[!,:Cell]
+metadata = tss_gene[!,[
+        "Image_Cell", 
+        "AREA_cell",
+        "AREA_nuc",
+         "Genotype",
+        "Timepoint",
+        "Rep",
+        "Sample"
+        ]]
+if in("linkedlocus", readdir(".."))
+mkdir("../linkedlocus/")
+end
+tb = innerjoin(metadata, tb, on = :Image_Cell)
+CSV.write(normpath(genefolder, "../linkedlocus/", nascent*"__"*ehn*"__linked"*string(max_distance)*"nm"*suffix*".csv"), tb)
+end
