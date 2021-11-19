@@ -802,8 +802,8 @@ metadata = tss_gene[!,[
         "Rep",
         "Sample"
         ]]
-if in("linkedlocus", readdir(".."))
-mkdir("../linkedlocus/")
+if in("linkedlocus", readdir(normpath(genefolder,"..")))
+mkdir(normpath(genefolder,"..", "linkedlocus"))
 end
 tb = innerjoin(metadata, tb, on = :Image_Cell)
 CSV.write(normpath(genefolder, "../linkedlocus/", nascent*"__"*ehn*"__linked"*string(max_distance)*"nm"*suffix*".csv"), tb)
