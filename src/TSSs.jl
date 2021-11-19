@@ -13,6 +13,7 @@ using Distances
 using ProgressMeter
 using ImageFiltering
 using FixedPointNumbers
+using CSV, NoLongerProblems
 
 include("FilesAndImages.jl")
 include("ReadOutlines.jl")
