@@ -62,3 +62,32 @@ function get_locus_data(exps...)
     end
     join_in_all_common_columns(dfs...)
 end
+
+function fixnames_gene_enh_pairs(df, tss2name, tss3name)
+    
+    newdf = deepcopy(df)
+    for ii in Symbol.(NoLongerProblems.columns_containing(df, "tss4"))
+            newdf = select!(newdf, Not(ii))
+    end
+    
+        for ii in Symbol.(NoLongerProblems.columns_containing(newdf, "TSS4"))
+            newdf = select!(newdf, Not(ii))
+    end
+    
+    for ii in NoLongerProblems.columns_containing(newdf, "tss2")
+        rename!(newdf, ii => replace(ii, "tss2"=>tss2name))
+    end
+    
+        for ii in NoLongerProblems.columns_containing(newdf, "TSS2")
+        rename!(newdf, ii => replace(ii, "TSS2"=>tss2name))
+    end
+    
+    for ii in NoLongerProblems.columns_containing(newdf, "TSS3")
+        rename!(newdf, ii => replace(ii, "TSS3"=>tss3name))
+    end
+    
+        for ii in NoLongerProblems.columns_containing(newdf, "tss3")
+        rename!(newdf, ii => replace(ii, "tss3"=>tss3name))
+    end
+    return newdf
+end
