@@ -353,3 +353,19 @@ function TSS_raw_quant(t2, tss_folder, image_folder, n; xy = 0.189, zx = 0.5)
     
 end
 
+
+# Quantify thresholded dots as we quantify TSSs
+function quantdots(imagefolder, typefolder)
+    type_folder = readdir(typefolder, join = true)
+    dots = CSV.read(type_folder[occursin.("_FISH-QUANT__threshold_spots_", type_folder)][1], DataFrames.DataFrame, skipto = 15,header=14)
+    images = split_by(dots, :File)
+    p = Progress(length(images))
+    for imagetostudy in keys(images)
+        image3D = TSSs.read_tiff_as_gray(normpath(imagesfolder,imagetostudy))
+        imdots = dots[dots[!,:File].==imagetostudy, :]
+        images[imagetostudy][!,:Spot_r2] = TSSs.int_brightest_pixel(image3D, imdots[:, :Y_det], imdots[:, :X_det], abs.(21 .-imdots[:, :Z_det]); radious = 2)
+        next!(p)
+    end
+    return vcat([images[ii] for ii in keys(images)]...)
+end
+
