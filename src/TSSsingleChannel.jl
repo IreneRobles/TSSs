@@ -363,7 +363,7 @@ function quantdots(imagefolder, typefolder)
     for imagetostudy in keys(images)
         image3D = TSSs.read_tiff_as_gray(normpath(imagesfolder,imagetostudy))
         imdots = dots[dots[!,:File].==imagetostudy, :]
-        images[imagetostudy][!,:Spot_r2] = TSSs.int_brightest_pixel(image3D, imdots[:, :Y_det], imdots[:, :X_det], abs.(21 .-imdots[:, :Z_det]); radious = 2)
+        images[imagetostudy][!,:Spot_r2] = TSSs.int_brightest_pixel(image3D, imdots[:, :Y_det], imdots[:, :X_det], imdots[:, :Z_det]; radious = 2)
         next!(p)
     end
     return vcat([images[ii] for ii in keys(images)]...)
