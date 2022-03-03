@@ -63,6 +63,31 @@ function int_brightest_pixel(im; radious = 0)
      
 end
 
+
+
+function int_brightest_pixel(im,x,y, z; radious = 0)
+    maxinds = size(im)
+    max_indexes = [x,y,z]
+    
+    x1 = if max_indexes[1]-radious >0 max_indexes[1]-radious else 1 end
+    x2 = if max_indexes[1]+radious <= maxinds[1] max_indexes[1]+radious else maxinds[1] end
+    
+    y1 = if max_indexes[2]-radious >0 max_indexes[2]-radious else 1 end
+    y2 = if max_indexes[2]+radious <= maxinds[2] max_indexes[2]+radious else maxinds[2] end
+    
+    z1 = if max_indexes[3]-radious >0 max_indexes[3]-radious else 1 end
+    z2 = if max_indexes[3]+radious <= maxinds[3] max_indexes[3]+radious else maxinds[3] end
+    return float(sum(im[x1:x2, y1:y2, z1:z2]))
+end
+
+
+function int_brightest_pixel(im,xs::Vector,ys::Vector,zs::Vector; radious = 0)
+    return [convert(Float32, TSSs.int_brightest_pixel(im,xs[ii],ys[ii],zs[ii]; radious = radious)) for ii in 1:length(xs)]
+end
+
+
+
+
 function get_image_patterns(imagefolder)
     files = readdir(imagefolder)
     bool = [length(split(f, r"_C[\d].|_C[\d]_")) > 1 for f in files]
